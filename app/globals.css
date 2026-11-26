@@ -1,26 +1,157 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #07111B;
+  --bg-secondary: #0C1B29;
+  --bg-card: #102233;
+  --copper: #C87535;
+  --copper-bright: #E58A45;
+  --accent-blue: #087CFF;
+  --text-primary: #F8FAFC;
+  --text-muted: #A7B4C2;
+  --border-subtle: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  background-color: #07111B;
+  color: #F8FAFC;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #07111B;
+  color: #F8FAFC;
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus indicators — high contrast copper ring */
+:where(a:any-link, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid #E58A45;
+  outline-offset: 3px;
+}
+
+/* Visually hidden utility (accessible to screen readers, visible on focus when used for skip links) */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  background: #C87535;
+  color: #07111B;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+}
+
+/* Native <dialog> modal scroll lock & backdrop styling (modern-web-guidance: dialog & prevent-page-scroll-under-modal-dialog) */
+dialog:modal {
+  overscroll-behavior: contain;
+  margin: auto;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(4, 10, 17, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+/* Defer form error display until user interaction (:user-invalid + fallback) */
+.field-control:is(:user-invalid, .user-invalid-fallback) {
+  border-color: #f87171;
+  background-color: rgba(127, 29, 29, 0.22);
+}
+
+.field-control:is(:user-invalid, .user-invalid-fallback) + .field-error {
+  display: flex;
+}
+
+.field-control:is(:user-valid, .user-valid-fallback) {
+  border-color: rgba(200, 117, 53, 0.55);
+}
+
+/* Metallic copper text gradient */
+.copper-gradient-text {
+  background: linear-gradient(125deg, #F4B982 0%, #E58A45 45%, #C87535 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle metallic gradient border surface */
+.copper-glass-card {
+  background: linear-gradient(155deg, rgba(16, 34, 51, 0.86) 0%, rgba(12, 27, 41, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+/* Ambient keyframes — only enabled when motion is allowed */
+@keyframes copper-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate3d(18px, -16px, 0) scale(1.06);
+    opacity: 0.55;
+  }
+}
+
+@keyframes ember-float {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.65;
+  }
+  80% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(12px, -90px, 0);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-copper-drift {
+    animation: copper-drift 14s ease-in-out infinite;
+  }
+  .animate-ember-float {
+    animation: ember-float 9s linear infinite;
+  }
 }
